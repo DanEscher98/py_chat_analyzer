@@ -17,4 +17,6 @@ def get_args() -> Namespace:
     )
     parser.add_argument("FILE", type=file_exists,
                         help="Whatsapp's txt file to process")
+    parser.add_argument("-n", "--name", default="a Person",
+                        help="The name")
     return parser.parse_args()

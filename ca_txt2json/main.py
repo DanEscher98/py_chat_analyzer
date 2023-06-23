@@ -15,7 +15,7 @@ def main():
             date_start = conversations[0].date
             date_end = conversations[-1].date
             print(f"# Days: {len(conversations)}")
-            ofile.write(pandoc_yaml("A conversation with Esteban Argumedo",
+            ofile.write(pandoc_yaml(f"A conversation with {args.name}",
                                     f"From {date_start} to {date_end}"))
             for convo in conversations:
                 ofile.write(str(convo))
