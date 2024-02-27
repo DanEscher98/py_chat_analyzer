@@ -19,4 +19,6 @@ def get_args() -> Namespace:
                         help="Whatsapp's txt file to process")
     parser.add_argument("-n", "--name", default="a Person",
                         help="The name")
+    parser.add_argument("-j", "--json", action="store_true",
+                        help="Enable json generation")
     return parser.parse_args()

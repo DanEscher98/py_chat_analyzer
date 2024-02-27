@@ -1,10 +1,25 @@
 import re
 import unidecode
+import datetime
 import emoji
 from urllib.parse import urlparse
 
 url_regex = re.compile(r"(https?://\S+|www\.\S+|\S+\.\S+)")
 chr_regex = re.compile('[' + re.escape("»{}'\"") + ']')
+
+
+class Date:
+    def __init__(self, date: str):
+        self.date = datetime.datetime.strptime(date, "%m/%d/%y")
+
+    def simple(self) -> str:
+        return self.date.strftime("%d/%m/%Y")
+
+    def human_readable(self) -> str:
+        return self.date.strftime("%A %d/%B/%Y")
+
+    def id(self) -> int:
+        return int(self.date.strftime("%Y%m%d"))
 
 
 def pandoc_yaml(convo_name, date_range) -> str:
@@ -23,7 +38,8 @@ header-includes:
 ---\n\n"""
 
 
-def urls2md(text: str) -> str:
+def url2md(text: str) -> str:
+    """Finds all urls and replace them with markdown format for links"""
     def convert_if_valid(url):
         parsed_url = urlparse(url)
         if all([parsed_url.scheme, domain := parsed_url.netloc]):
@@ -34,20 +50,28 @@ def urls2md(text: str) -> str:
             return f"[{domain}]({url})"
         return url
 
-    markdown_text = re.sub(url_regex,
-                           lambda match: convert_if_valid(match.group(0)),
-                           text)
-    return markdown_text
+    mdurl_text = re.sub(url_regex,
+                        lambda match: convert_if_valid(match.group(0)),
+                        text)
+    return mdurl_text
 
 
-def special2escaped(text: str) -> str:
+def special2latex(text: str) -> str:
+    """Converts or removes special characters in order to produce
+    compilable Latex strings"""
     # return re.sub(chr_regex, lambda match: '\\' + match.group(), text)
     return re.sub(r"[\'\"]", "", text)
 
 
 def utf2asciimd(message: str) -> str:
-    url_mdify = urls2md(message)
+    """Applies multiple filters to convert a UTF string into plain ascii
+    Markdown format.
+    1. Converts `url`s to markdown syntax
+    2. Replace emojis with its textual form
+    3. Remove any left character non ascii
+    4. Handles special characters"""
+    url_mdify = url2md(message)
     txt_demoji = emoji.demojize(url_mdify, delimiters=(" :", ": "))
     chr_asciify = unidecode.unidecode(txt_demoji, errors='replace')
-    esc_special = special2escaped(chr_asciify)
+    esc_special = special2latex(chr_asciify)
     return esc_special

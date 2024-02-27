@@ -1,25 +1,24 @@
 import os
+import json
 from ca_txt2json.cli import get_args
-from ca_txt2json.digest import parse_chat
-from ca_txt2json.format import pandoc_yaml
+from ca_txt2json.digest import ParsedConversations
 
 
 def main():
     args = get_args()
-    input_file = args.FILE
-    output_file = "output/" + os.path.basename(
-            input_file.replace(".txt", ".md"))
-    with open(input_file, "r") as ifile:
-        with open(output_file, "w") as ofile:
-            conversations = parse_chat(ifile.read())
-            date_start = conversations[0].date
-            date_end = conversations[-1].date
-            print(f"# Days: {len(conversations)}")
-            ofile.write(pandoc_yaml(f"A conversation with {args.name}",
-                                    f"From {date_start} to {date_end}"))
-            for convo in conversations:
-                ofile.write(str(convo))
-        with open(output_file, "r") as ofile:
-            print(f"Total lines: {len(ofile.readlines())}")
+    in_file = args.FILE
+    file_name = "output/" + os.path.basename(in_file).replace(".txt", "")
 
-    print("Program sucessuflly finished")
+    with open(in_file, "r") as ifile:
+        md_file = file_name + ".md"
+        with open(md_file, "w") as ofile:
+            conversations = ParsedConversations(ifile.read())
+            for section in conversations.mdstr(args.name):
+                ofile.write(section)
+
+        if args.json:
+            json_file = file_name + ".json"
+            with open(json_file, "w") as json_file:
+                json.dump(conversations.jsonobj(), json_file, sort_keys=True)
+
+    print("File parsed sucessuflly")
