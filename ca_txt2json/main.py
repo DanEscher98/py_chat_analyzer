@@ -22,3 +22,7 @@ def main():
                 json.dump(conversations.jsonobj(), json_file, sort_keys=True)
 
     print("File parsed sucessuflly")
+
+
+if __name__ == "__main__":
+    main()

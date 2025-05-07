@@ -7,7 +7,6 @@ from urllib.parse import urlparse
 url_regex = re.compile(r"(https?://\S+|www\.\S+|\S+\.\S+)")
 chr_regex = re.compile('[' + re.escape("»{}'\"") + ']')
 
-
 class Date:
     def __init__(self, date: str):
         self.date = datetime.datetime.strptime(date, "%m/%d/%y")
@@ -72,6 +71,16 @@ def utf2asciimd(message: str) -> str:
     4. Handles special characters"""
     url_mdify = url2md(message)
     txt_demoji = emoji.demojize(url_mdify, delimiters=(" :", ": "))
-    chr_asciify = unidecode.unidecode(txt_demoji, errors='replace')
-    esc_special = special2latex(chr_asciify)
+
+    preserved = txt_demoji \
+        .replace("ñ", "<<N_TILDE_LOWER>>") \
+        .replace("Ñ", "<<N_TILDE_UPPER>>")
+    
+    chr_asciify = unidecode.unidecode(preserved, errors='replace')
+    
+    latexified = chr_asciify \
+        .replace("<<N_TILDE_LOWER>>", r"ñ" ) \
+        .replace("<<N_TILDE_UPPER>>", r"Ñ")
+    
+    esc_special = special2latex(latexified)
     return esc_special
