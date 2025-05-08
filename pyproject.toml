@@ -20,6 +20,8 @@ ca-chat-nlp = [
 dev = [
     "ipython>=9.2.0",
     "pip>=25.1.1",
+    "pytest>=8.3.5",
+    "pytest-cov>=6.1.1",
 ]
 
 [tool.setuptools]
@@ -30,3 +32,8 @@ packages = [
 
 [tool.uv.sources]
 kaleido = { git = "https://github.com/plotly/kaleido", subdirectory = "src/py", rev = "latest-tag" }
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_functions = "test_*"
