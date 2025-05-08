@@ -37,8 +37,9 @@ def flatby_count(chat):
 
 
 def digest(file: str):
-    with open(file, "w") as f:
+    with open(file, "r") as f:
         contents: Dict[str, List[Dict[str, str]]] = json.load(f)
-    
+
+    return contents
 
 

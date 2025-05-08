@@ -3,6 +3,7 @@ set shell := ["bash", "-c"]
 convert FILE:
   @NAME=$(basename {{FILE}} .txt);\
   uv run -m ca_txt2json.main data/$NAME.txt --json; \
+  cat output/$NAME.json | jq > output/fmt_$NAME.json
   echo "Done: txt -> (json, md)";\
 
 pdf FILE:
