@@ -9,7 +9,8 @@ chr_regex = re.compile('[' + re.escape("»{}'\"") + ']')
 
 class Date:
     def __init__(self, date: str):
-        self.date = datetime.datetime.strptime(date, "%m/%d/%y")
+        #self.date = datetime.datetime.strptime(date, "%m/%d/%y")
+        self.date = datetime.datetime.strptime(date, "%d/%m/%y")
 
     def simple(self) -> str:
         return self.date.strftime("%d/%m/%Y")

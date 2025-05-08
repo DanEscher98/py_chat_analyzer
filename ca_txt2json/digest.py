@@ -1,7 +1,7 @@
 import unidecode
 import re
 import textwrap
-from typing import List, Iterator, Dict
+from typing import List, Iterator, Dict, Any
 from ca_txt2json.format import utf2asciimd, pandoc_yaml, Date
 
 
@@ -58,16 +58,21 @@ class ParsedConversations:
         date_end = self.conversations[-1].date.simple()
         yield pandoc_yaml(f"A conversation with {name}",
                           f"From {date_start} to {date_end}")
+        yield r'\newpage'
         for convo in self.conversations:
             yield str(convo)
+
+
+def list_messages(text: str) -> List[Any]:
+    # pattern = r"(\d+/\d+/\d+), (\d+:\d+\s*[APM]*) - ([^:\n]+): ([^\n]*)"
+    pattern = r"\[(\d+/\d+/\d+), (\d+:\d+:\d+\s*(?:a\.m\.|p\.m\.)?)\] ([^:]+): ([^\n]*)"
+    return re.findall(pattern, text, re.MULTILINE | re.DOTALL)
 
 
 def parse_chat(text: str) -> List[Conversation]:
     """Generates a list of `Conversation`s. from an txt WhatsApp file"""
 
-    pattern = r"(\d+/\d+/\d+), (\d+:\d+\s*[APM]*) - ([^:\n]+): ([^\n]*)"
-    matched_msg = iter(re.findall(pattern, text, re.MULTILINE | re.DOTALL))
-
+    matched_msg = iter(list_messages(text))
     curr_date, _, curr_sender, message = next(matched_msg)
     curr_msg = Message(curr_sender)
     curr_msg.append(message)
