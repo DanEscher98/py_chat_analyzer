@@ -3,16 +3,24 @@ name = "py-chat-analyzer"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.12"
 dependencies = [
     "emoji>=2.14.1",
     "unidecode>=1.4.0",
 ]
 
 [dependency-groups]
+ca-chat-nlp = [
+    "matplotlib>=3.10.1",
+    "pandas>=2.2.3",
+    "spacy>=3.8.5",
+]
 dev = [
     "ipython>=9.2.0",
 ]
 
 [tool.setuptools]
-packages = ["ca_txt2json"]
+packages = [
+  "ca_txt2json",
+  "ca_chat_nlp"
+]

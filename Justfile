@@ -11,3 +11,6 @@ pdf FILE:
   echo "Done: md -> pdf";\
   cp output/$NAME.pdf ~/Downloads;\
   evince -p 1 output/$NAME.pdf
+
+install:
+  uv sync --all-groups
