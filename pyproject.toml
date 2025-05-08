@@ -11,8 +11,10 @@ dependencies = [
 
 [dependency-groups]
 ca-chat-nlp = [
+    "kaleido",
     "matplotlib>=3.10.1",
     "pandas>=2.2.3",
+    "plotly>=6.0.1",
     "spacy>=3.8.5",
 ]
 dev = [
@@ -25,3 +27,6 @@ packages = [
   "ca_txt2json",
   "ca_chat_nlp"
 ]
+
+[tool.uv.sources]
+kaleido = { git = "https://github.com/plotly/kaleido", subdirectory = "src/py", rev = "latest-tag" }
