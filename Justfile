@@ -15,3 +15,10 @@ pdf FILE:
 
 install:
   uv sync --all-groups
+
+format:
+  uv run ruff check .
+
+test:
+  uv run pytest -v
+  #uv run pytest --cov=

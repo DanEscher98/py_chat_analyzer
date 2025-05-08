@@ -1,6 +1,4 @@
-import matplotlib.pyplot as plt
-import pandas as pd
-from typing import Dict, Tuple, Iterator, List
+from typing import Dict, Tuple, List
 import json
 import re
 
